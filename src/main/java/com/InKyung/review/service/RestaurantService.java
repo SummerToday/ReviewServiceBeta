@@ -1,16 +1,22 @@
 package com.InKyung.review.service;
 
 import com.InKyung.review.api.request.CreateAndEditRestaurantRequest;
+import com.InKyung.review.api.response.RestaurantDetailView;
+import com.InKyung.review.api.response.RestaurantView;
 import com.InKyung.review.model.MenuEntity;
+import com.InKyung.review.model.QRestaurantEntity;
 import com.InKyung.review.model.RestaurantEntity;
 import com.InKyung.review.repository.MenuRepository;
 import com.InKyung.review.repository.RestaurantRepository;
-import jakarta.transaction.Transactional;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+
+
 
 @RequiredArgsConstructor
 @Service
@@ -84,4 +90,50 @@ public class RestaurantService {
         List<MenuEntity> menus = menuRepository.findAllByRestaurantId(restaurantId);
         menuRepository.deleteAll(menus);
     }
+
+    @Transactional(readOnly = true)
+    public List<RestaurantView> getAllRestaurants(){
+        List<RestaurantEntity> restaurants = restaurantRepository.findAll();
+
+        return restaurants.stream().map((restaurant) -> RestaurantView.builder()
+                .id(restaurant.getId())
+                .name(restaurant.getName())
+                .address(restaurant.getAddress())
+                .createdAt(restaurant.getCreatedAt())
+                .updatedAt(restaurant.getUpdatedAt())
+                .build()
+        ).toList();
+
+    } // 수정, 생성을 안하는 읽기만 하는 메소드는  @Transactional을 굳이 붙여주지 않아도 됨.
+      // 굳이 해주고 싶다면  @Transactional(readOnly = true)를 사용
+
+    @Transactional(readOnly = true)
+    public RestaurantDetailView getRestaurantDetail(Long restaurantId){
+        RestaurantEntity restaurant = restaurantRepository.findById(restaurantId).orElseThrow();
+        List<MenuEntity> menus = menuRepository.findAllByRestaurantId(restaurantId);
+
+        return RestaurantDetailView.builder()
+                .id(restaurant.getId())
+                .name(restaurant.getName())
+                .address(restaurant.getAddress())
+                .createdAt(restaurant.getCreatedAt())
+                .updatedAt(restaurant.getUpdatedAt())
+                .menus(
+                        menus.stream().map((menu) -> RestaurantDetailView.Menu.builder()
+                                .id(menu.getId())
+                                .name(menu.getName())
+                                .price(menu.getPrice())
+                                .createdAt(menu.getCreatedAt())
+                                .updatedAt(menu.getUpdatedAt())
+                                .build()
+                        ).toList()
+                )
+                .build();
+
+    }
 }
+/*
+람다 표현식 ex. (prameters) -> expression
+=> 람다 표현식은 메서드로 전달할 수 있는 익명 함수를 단순화한 것.
+   람다 표현식에는 이름은 없지만, 파라미터 리스트, 바디, 반환 형식, 발생할 수 있는 예외 리스트는 가질 수 있음.
+ */

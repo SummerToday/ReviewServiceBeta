@@ -1,25 +1,31 @@
 package com.InKyung.review.api;
 
 import com.InKyung.review.api.request.CreateAndEditRestaurantRequest;
+import com.InKyung.review.api.response.RestaurantDetailView;
+import com.InKyung.review.api.response.RestaurantView;
 import com.InKyung.review.model.RestaurantEntity;
 import com.InKyung.review.service.RestaurantService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.ZonedDateTime;
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 public class RestaurantApi {
 
     private final RestaurantService restaurantService;
     @GetMapping("/restaurants")
-    public String getRestaurants(){
-        return "This is getRestaurants";
+    public List<RestaurantView> getRestaurants(){
+        return restaurantService.getAllRestaurants();
     }
 
     @GetMapping("/restaurant/{restaurantId}")
-    public String getRestaurant(
+    public RestaurantDetailView getRestaurant(
             @PathVariable Long restaurantId
     ){
-        return "This is getRestaurant, " + restaurantId;
+        return restaurantService.getRestaurantDetail(restaurantId);
     }
 
     @PostMapping("/restaurant")
