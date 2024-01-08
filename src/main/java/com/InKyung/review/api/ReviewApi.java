@@ -12,23 +12,25 @@ import org.springframework.web.bind.annotation.*;
 public class ReviewApi {
     private final ReviewService reviewService;
 
-    @PostMapping("/review")
+    @PostMapping("/review") // 리뷰 생성
     public void createReview(
             @RequestBody CreateReviewRequest request
     ){
         reviewService.createReview(request.getRestaurantId(), request.getContent(), request.getScore());
     }
 
-    @DeleteMapping("/review/{reviewId}")
-    public void deleteReview(@PathVariable("reviewId") Long reviewId){
+    @DeleteMapping("/review/{reviewId}") // 특정 리뷰 삭제
+    public void deleteReview(
+            @PathVariable("reviewId") Long reviewId
+    ){
         reviewService.deleteReview(reviewId);
     }
 
-    @GetMapping("/restaurant/{restaurantId}/reviews")
+    @GetMapping("/restaurant/{restaurantId}/reviews") // 리뷰 조회
     public ReviewDto getRestaurantReviews(
             @PathVariable("restaurantId") Long restaurantId,
-            @RequestParam("offset") Integer offset,
-            @RequestParam("limit") Integer limit
+            @RequestParam("offset") Integer offset, // 리스트 시작 지점
+            @RequestParam("limit") Integer limit // 한 페이지에 보여질 리스트 개수
     ){
         return reviewService.getRestaurantReview(restaurantId, PageRequest.of(offset/limit, limit));
     }
