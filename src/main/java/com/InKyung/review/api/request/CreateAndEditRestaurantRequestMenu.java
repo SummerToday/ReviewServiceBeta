@@ -8,6 +8,6 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 public class CreateAndEditRestaurantRequestMenu {
-    private final String name;
-    private final Integer price;
+    private final String name; // 맛집 메뉴 이름
+    private final Integer price; // 맛집 메뉴 가격
 }

@@ -19,7 +19,7 @@ import java.util.List;
 
 
 @RequiredArgsConstructor
-@Service
+@Service // 24.01.09, 여기서 부터 다시 시작.
 public class RestaurantService {
     private final RestaurantRepository restaurantRepository;
     private final MenuRepository menuRepository;

@@ -8,11 +8,13 @@ public class TestResponseApi {
 
     @GetMapping("/test/response/string")
     public String stringResponse(){
+
         return "This is String";
     }
 
     @GetMapping("/test/response/json")
     public TestResponseBody jsonResponse(){
+
         return new TestResponseBody("InKyung",25); //데이터를 객체로 만들어서 리턴.
     }
 

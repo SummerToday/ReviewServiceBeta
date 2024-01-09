@@ -10,7 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @Getter
-public class RestaurantDetailView {
+public class RestaurantDetailView { // 맛집 세부 정보
     private final Long id;
     private final String name;
     private final String address;

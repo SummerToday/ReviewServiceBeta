@@ -35,12 +35,13 @@ public class TestRequestApi {
     }
 
     public static class TestRequestBody {
+        String name;
+        Integer age;
+
         public TestRequestBody(String name, Integer age) {
             this.name = name;
             this.age = age;
         } // Alt + Insert 단축키 후 생성자에서 초기화 할 변수 선택.
 
-        String name;
-        Integer age;
     }
 }

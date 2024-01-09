@@ -8,7 +8,7 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 public class CreateAndEditRestaurantRequest {
-    private final String name;
-    private final String address;
-    private final List<CreateAndEditRestaurantRequestMenu> menus;
+    private final String name; // 맛집 이름
+    private final String address; //맛집 주소
+    private final List<CreateAndEditRestaurantRequestMenu> menus; // 맛집 메뉴 리스트
 }

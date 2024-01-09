@@ -10,9 +10,9 @@ import java.time.ZonedDateTime;
 @Builder
 @Getter
 public class RestaurantView {
-    private final Long id;
-    private final String name;
-    private final String address;
-    private final ZonedDateTime createdAt;
-    private final ZonedDateTime updatedAt;
+    private final Long id;  // 맛집 등록번호
+    private final String name; // 맛집 이름
+    private final String address; // 맛집 주소
+    private final ZonedDateTime createdAt; // 맛집정보 등록일시
+    private final ZonedDateTime updatedAt; // 맛집정보 수정일시
 }
