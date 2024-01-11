@@ -11,7 +11,8 @@ import org.springframework.context.annotation.Configuration;
 public class QuerydsConfig {
     private final EntityManager em;
 
-    @Bean
+    @Bean // @Bean은 메소드 수준의 어노테이션. Spring Bean을 등록하기 위한 어노테이션입니다.
+    // Spring Bean이란 스프링이 관리하는 오브젝트로, 스프링 프레임워크 컨테이너에 의해 인스턴스화되고, 구성되고, 관리되는 객체.
     public JPAQueryFactory queryFactory(){
         return new JPAQueryFactory(em);
     }

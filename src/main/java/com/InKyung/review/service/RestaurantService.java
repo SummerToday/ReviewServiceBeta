@@ -18,13 +18,15 @@ import java.util.List;
 
 
 
-@RequiredArgsConstructor
-@Service // 24.01.09, 여기서 부터 다시 시작.
+@RequiredArgsConstructor // final로 선언된 모든 필드를 인자 값으로 하는 생성자를 생성. (의존성 주입(DI) - 생성자 주입 방식.
+                         // bc. 생성자가 단 한개만 선언이 되어있으면 @Autowired 어노테이션을 생략 가능. 원래는  @Autowired 어노테이션과 생성자를 사용해서
+                         //     의존성을 주입해주는 방법이 일반적 but. 이 방식이 더 좋은 방식.)
+@Service // 비즈니스 로직 구현.
 public class RestaurantService {
     private final RestaurantRepository restaurantRepository;
     private final MenuRepository menuRepository;
     @Transactional
-    public RestaurantEntity createRestaurant(
+    public RestaurantEntity createRestaurant( // 맛집 정보 생성 로직.
             CreateAndEditRestaurantRequest request
     ){
         RestaurantEntity restaurant = RestaurantEntity.builder()
@@ -58,7 +60,7 @@ public class RestaurantService {
          */
     }
     @Transactional
-    public void editRestaurant(
+    public void editRestaurant( // 맛집 정보 수정 로직.
             Long restaurantId,
             CreateAndEditRestaurantRequest request
     ){
@@ -83,7 +85,7 @@ public class RestaurantService {
     }
 
     @Transactional
-    public void deleteRestaurant(Long restaurantId){
+    public void deleteRestaurant(Long restaurantId){ // 맛집 정보 삭제 로직.
         RestaurantEntity restaurant = restaurantRepository.findById(restaurantId).orElseThrow(); // 예외 처리도 같이 구현.
         restaurantRepository.delete(restaurant);
 
@@ -92,7 +94,7 @@ public class RestaurantService {
     }
 
     @Transactional(readOnly = true)
-    public List<RestaurantView> getAllRestaurants(){
+    public List<RestaurantView> getAllRestaurants(){ // 맛집 리스트 가져오기 로직.
         List<RestaurantEntity> restaurants = restaurantRepository.findAll();
 
         return restaurants.stream().map((restaurant) -> RestaurantView.builder()
@@ -108,7 +110,7 @@ public class RestaurantService {
       // 굳이 해주고 싶다면  @Transactional(readOnly = true)를 사용
 
     @Transactional(readOnly = true)
-    public RestaurantDetailView getRestaurantDetail(Long restaurantId){
+    public RestaurantDetailView getRestaurantDetail(Long restaurantId){ // 맛집 정보 가져오기 로직.
         RestaurantEntity restaurant = restaurantRepository.findById(restaurantId).orElseThrow();
         List<MenuEntity> menus = menuRepository.findAllByRestaurantId(restaurantId);
 
@@ -132,8 +134,57 @@ public class RestaurantService {
 
     }
 }
+
 /*
 람다 표현식 ex. (prameters) -> expression
 => 람다 표현식은 메서드로 전달할 수 있는 익명 함수를 단순화한 것.
    람다 표현식에는 이름은 없지만, 파라미터 리스트, 바디, 반환 형식, 발생할 수 있는 예외 리스트는 가질 수 있음.
+
+cf) private final 선언
+   -> 직접적으로 값을 참조할 수 없지만 생성자를 통해 값을 참조
+      변수를 사용하면 재할당 하지 못하며, 해당 필드, 메서드 별로 호출할 때마다 새로이 값이 할당(인스턴스화)한다.
+      객체 생성 시 private final 변수는 초기화가 가능
+
+    private static final 선언
+   -> 생성자를 통해 값을 참조할 수 없다.
+      private static final 변수는 무조건 초기화 되어있어야 한다.
+      즉, 절대 해당 값을 바꾸지 않을 때 사용.
+      변수를 사용하면 재할당 하지 못하며, 메모리에 한번 올라가면 같은 값을 클래스 내부의 전체 필드, 메서드에서 공유한다.
+
+    ** 스프링 핵심 4가지 개념 **
+    IOC(제어의 역전): 객체의 생성과 관리를 개발자가 하는 것이 아니라 프레임워크가 대신 하는 것.
+    DI(의존성 주입): 외부에서 객체를 주입 받아 사용하는 것.
+    AOP(관점 지향 프로그래밍): 프로그래밍을 할 때 핵심 관점과 부가 관점을 나누어서 개발하는 것.
+    PSA(이식 가능한 서비스 추상화): 어느기술을 사용하던 일관된 방식으로 처리하도록 하는 것.
+
+ex.
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/example")
+public class RequiredArgsConstructorControllerExample {
+
+  private final FirstService firstService;
+  private final SecondService secondService;
+  private final ThirdService thirdService;
+
+  ...
+}
+=>
+@RestController
+@RequestMapping("/example")
+public class RequiredArgsConstructorControllerExample {
+
+  private final FirstService firstService;
+  private final SecondService secondService;
+  private final ThirdService thirdService;
+
+  @Autowired
+  public RequiredArgsConstructorControllerExample(FirstService firstService, SecondService secondService, ThirdService thirdService) {
+    this.firstRepository = firstRepository;
+    this.secondRepository = secondRepository;
+    this.thirdRepository = thirdRepository;
+  }
+}
+위 두가지 코드는 같은 코드.
+
  */
