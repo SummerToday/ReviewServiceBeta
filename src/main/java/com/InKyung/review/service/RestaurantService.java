@@ -25,7 +25,8 @@ import java.util.List;
 public class RestaurantService {
     private final RestaurantRepository restaurantRepository;
     private final MenuRepository menuRepository;
-    @Transactional
+    @Transactional // 2개 이상의 쿼리를 하나의 처리 단위로 묶어 DB로 전송하고, 이 과정에서 에러가 발생할 경우 자동으로 모든 과정을 되돌려 놓아줌.
+                   //클래스에 @Transactional을 붙여주면 메소드까지 모두 적용. 메소드 단위별로 적용도 가능.
     public RestaurantEntity createRestaurant( // 맛집 정보 생성 로직.
             CreateAndEditRestaurantRequest request
     ){
@@ -107,7 +108,7 @@ public class RestaurantService {
         ).toList();
 
     } // 수정, 생성을 안하는 읽기만 하는 메소드는  @Transactional을 굳이 붙여주지 않아도 됨.
-      // 굳이 해주고 싶다면  @Transactional(readOnly = true)를 사용
+      // but.  @Transactional(readOnly = true)를 사용 -> 조회 속도 개선 효과도 존재.
 
     @Transactional(readOnly = true)
     public RestaurantDetailView getRestaurantDetail(Long restaurantId){ // 맛집 정보 가져오기 로직.

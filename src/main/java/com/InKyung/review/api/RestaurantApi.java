@@ -21,7 +21,7 @@ import java.util.List;
 클라이언트가 특정 요청을 하게 되면 처리하기 위해서 스프링은 제일 먼저 해당하는 Controller를 찾게 되는데 이때 @Controller라고 명시된 클래스들을 탐색.
 그리고 Mapping주소가 일치하는 메소드의 내용을 실행.
 
-@Controller -> view를 반환하기 위해 사용 but. 데이터를 반환하기 위해서는 @ResponseBody 어노테이션을 사용해주어야 JSON 형태로 데이터 반환 가능.
+@Controller -> view에 객체를 반환하기 위해 사용 but. 데이터를 반환하기 위해서는 @ResponseBody 어노테이션을 사용해주어야 JSON 형태로 데이터 반환 가능.
 @RestController -> JSON 형태로 객체 데이터를 반환하는 것이 주용도.
  */
 @RequiredArgsConstructor
@@ -43,7 +43,7 @@ public class RestaurantApi {
 
     @PostMapping("/restaurant") // 맛집 정보 생성
     public void createRestaurant(
-            @RequestBody CreateAndEditRestaurantRequest request
+            @RequestBody CreateAndEditRestaurantRequest request // @RequestBody: HTTP 요청의 바디내용을 자바객체로 변환해서 매핑된 메소드 파라미터로 전달.
             ){
         restaurantService.createRestaurant(request);
     }
