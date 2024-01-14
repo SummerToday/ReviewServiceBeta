@@ -25,21 +25,21 @@ import java.util.List;
 public class RestaurantService {
     private final RestaurantRepository restaurantRepository;
     private final MenuRepository menuRepository;
-    @Transactional // 2개 이상의 쿼리를 하나의 처리 단위로 묶어 DB로 전송하고, 이 과정에서 에러가 발생할 경우 자동으로 모든 과정을 되돌려 놓아줌.
-                   //클래스에 @Transactional을 붙여주면 메소드까지 모두 적용. 메소드 단위별로 적용도 가능.
-    public RestaurantEntity createRestaurant( // 맛집 정보 생성 로직.
+    @Transactional // 2개 이상의 쿼리를 하나의 처리 단위로 묶어 DB로 전송하고, 메소드 내에서 수행되는 모든 데이터베이스 작업은 하나의 트랜잭션으로 묶임.
+                   // 이 트랜잭션은 메소드 내에서 예외가 발생하지 않으면 커밋되고, 예외가 발생하면 롤백됨.
+    public void createRestaurant( // 맛집 정보 생성 로직.
             CreateAndEditRestaurantRequest request
     ){
-        RestaurantEntity restaurant = RestaurantEntity.builder()
+        RestaurantEntity restaurant = RestaurantEntity.builder()  // @build를 통해 생성된 빌더클래스 생성자.
                 .name(request.getName())
                 .address(request.getAddress())
                 .createdAt(ZonedDateTime.now())
                 .updatedAt(ZonedDateTime.now())
-                .build(); // bc.id 속성은 생성할 필요가 없기 때문에 전체 객체 생성 안하고 build를 통해 각각 생성.
+                .build(); // bc.id 속성은 생성할 필요가 없기 때문에 생성x. build()가 객체를 생성해 봔환.
 
-        restaurantRepository.save(restaurant);
+        restaurantRepository.save(restaurant); // restaurant 엔티티를 DB에 저장. DB 없던 데이터를 저장하니 INSERT 실행.
 
-        request.getMenus().forEach((menu) -> {
+        request.getMenus().forEach((menu) -> { // 가져온 메뉴 리스트에 람다 표현식을 이용하여 해당 메뉴 엔티티의 객체를 생성 삽입하여 저장하는 하는 로직 반복. menu는 임의의 매개변수.
             MenuEntity menuEntity = MenuEntity.builder()
                     .restaurantId(restaurant.getId())
                     .name(menu.getName())
@@ -48,11 +48,11 @@ public class RestaurantService {
                     .updatedAt(ZonedDateTime.now())
                     .build();
 
-            menuRepository.save(menuEntity);
+            menuRepository.save(menuEntity);  // menu 엔티티를 DB에 저장. DB 없던 데이터를 저장하니 INSERT 실행.
 
         });
 
-        return restaurant;
+        //return restaurant;
 
         /*
          restaurantRepository.save(restaurant);는 restaurant라는 객체를 데이터베이스에 저장하거나
@@ -65,12 +65,12 @@ public class RestaurantService {
             Long restaurantId,
             CreateAndEditRestaurantRequest request
     ){
-        RestaurantEntity restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() -> new RuntimeException("없는 레스토랑입니다."));
-        restaurant.changeNameAndAddress(request.getName(), request.getAddress());
-        restaurantRepository.save(restaurant);
+        RestaurantEntity restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() -> new RuntimeException("없는 레스토랑입니다.")); // restaurantId를 사용하여 해당 엔티티를 찾고 없으면 예외 발생.
+        restaurant.changeNameAndAddress(request.getName(), request.getAddress()); // 주어진 맛집 이름, 위치로 정보 수정.
+        restaurantRepository.save(restaurant); //수정된 레스토랑 엔티티 저장.
 
         List<MenuEntity> menus = menuRepository.findAllByRestaurantId(restaurantId);
-        menuRepository.deleteAll(menus);
+        menuRepository.deleteAll(menus); // 찾아낸 메뉴 엔티티들을 데이터베이스에서 삭제.
 
         request.getMenus().forEach((menu) -> {
             MenuEntity menuEntity = MenuEntity.builder()
@@ -79,9 +79,9 @@ public class RestaurantService {
                     .price(menu.getPrice())
                     .createdAt(ZonedDateTime.now())
                     .updatedAt(ZonedDateTime.now())
-                    .build();
+                    .build(); // 새로 만든 메뉴 엔티티 객체 생성.
 
-            menuRepository.save(menuEntity);
+            menuRepository.save(menuEntity); // menu 엔티티를 DB에 저장. DB 없던 데이터를 저장하니 INSERT 실행.
         });
     }
 
@@ -188,4 +188,9 @@ public class RequiredArgsConstructorControllerExample {
 }
 위 두가지 코드는 같은 코드.
 
+ * save() 메소드가 호출될 때 save() 메소드는 2가지 방식으로 작동.
+    1. DB에서 가져오지 않은 새로운 객체를 저장하는 경우
+        insert SQL이 나오며 새로운 데이터가 저장되게 됩니다!
+    2. DB에 이미 저장되어 있는 객체를 저장하는 경우
+        update set 필드=변경되는값, ... where id = ? 라는 update SQL이 나가며 기존의 데이터가 업데이트 됨.
  */

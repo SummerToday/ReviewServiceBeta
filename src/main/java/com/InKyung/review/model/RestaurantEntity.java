@@ -22,7 +22,7 @@ public class RestaurantEntity {
     private ZonedDateTime createdAt;  // Entity의 timestamp 형식은 자바 데이터 타입에서는 로컬 테이터 타입 or ZonedDateTime으로 만들어주면 됨.
     private ZonedDateTime updatedAt;
 
-    public void changeNameAndAddress(String name, String address){
+    public void changeNameAndAddress(String name, String address){ // 맛집 이름, 위치 수정.
         this.name = name;
         this.address = address;
         this.updatedAt = ZonedDateTime.now();
