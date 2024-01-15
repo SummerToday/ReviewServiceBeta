@@ -88,17 +88,17 @@ public class RestaurantService {
     @Transactional
     public void deleteRestaurant(Long restaurantId){ // 맛집 정보 삭제 로직.
         RestaurantEntity restaurant = restaurantRepository.findById(restaurantId).orElseThrow(); // 예외 처리도 같이 구현.
-        restaurantRepository.delete(restaurant);
+        restaurantRepository.delete(restaurant); // 해당 맛집 엔티티를 삭제.
 
-        List<MenuEntity> menus = menuRepository.findAllByRestaurantId(restaurantId);
-        menuRepository.deleteAll(menus);
+        List<MenuEntity> menus = menuRepository.findAllByRestaurantId(restaurantId); // 해당 맛집과 관련된 메뉴 리스트 찾기.
+        menuRepository.deleteAll(menus); // 메뉴 삭제.
     }
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true) // 읽기 전용 트랜잭션으로 실행.
     public List<RestaurantView> getAllRestaurants(){ // 맛집 리스트 가져오기 로직.
-        List<RestaurantEntity> restaurants = restaurantRepository.findAll();
+        List<RestaurantEntity> restaurants = restaurantRepository.findAll(); // 데이터 베이스에서 모든 맛집들을 리스트로 조회.
 
-        return restaurants.stream().map((restaurant) -> RestaurantView.builder()
+        return restaurants.stream().map((restaurant) -> RestaurantView.builder() // Stream API 사용
                 .id(restaurant.getId())
                 .name(restaurant.getName())
                 .address(restaurant.getAddress())
@@ -189,9 +189,49 @@ public class RequiredArgsConstructorControllerExample {
 위 두가지 코드는 같은 코드.
 
  * save() 메소드가 호출될 때 save() 메소드는 2가지 방식으로 작동.
-    1. DB에서 가져오지 않은 새로운 객체를 저장하는 경우
+    - DB에서 가져오지 않은 새로운 객체를 저장하는 경우
         insert SQL이 나오며 새로운 데이터가 저장되게 됩니다!
-    2. DB에 이미 저장되어 있는 객체를 저장하는 경우
+    - DB에 이미 저장되어 있는 객체를 저장하는 경우
         update set 필드=변경되는값, ... where id = ? 라는 update SQL이 나가며 기존의 데이터가 업데이트 됨.
+
+ * Stream API의 특징
+   - 원본의 데이터를 변경 x.
+     -> Stream API는 원본의 데이터를 조회하여 원본의 데이터가 아닌 별도의 요소들로 Stream을 생성.
+        때문에 원본의 데이터로부터 읽기만 할 뿐이며, 정렬이나 필터링 등의 작업은 별도의 Stream 요소들에서 처리.
+
+   - 일회용 -> 재사용 불가.
+     -> Stream API는 일회용이기 때문에 한번 사용이 끝나면 재사용이 불가능하다. Stream이 또 필요한 경우에는 Stream을 다시 생성해주어야 함.
+        만약 닫힌 Stream을 다시 사용한다면 IllegalStateException이 발생.
+
+   - 내부 반복으로 작업을 처리. -> 코드가 간결해짐.
+     -> Stream을 이용하면 코드가 간결해지는 이유 중 하나는 '내부 반복' 때문.
+        기존에는 반복문을 사용하기 위해서 for이나 while 등과 같은 문법을 사용해야 했지만,
+        stream에서는 그러한 반복 문법을 메소드 내부에 숨기고 있기 때문에, 보다 간결한 코드의 작성이 가능.
+        ex. nameStream.forEach(System.out::println);
+
+  * Stream API의 3가지 단계
+    1. 생성
+       Stream 객체를 생성하는 단계 Stream은 재사용이 불가능하므로, 닫히면 다시 생성해주어야함.
+       Stream 연산을 하기 위해서는 먼저 Stream 객체를 생성해주어야함.
+       배열, 컬렉션, 임의의 수, 파일 등 거의 모든 것을 가지고 스트림을 생성 가능. 주의할 점은 연산이 끝나면 Stream이 닫히기 때문에,
+       Stream이 닫혔을 경우 다시 Stream을 생성해야함.
+
+    2. 가공
+       원본의 데이터를 별도의 데이터로 가공하기 위한 중간 연산. 연산 결과를 Stream으로 다시 반환하기 때문에 연속해서 중간 연산을 이어갈 수 있음.
+       가공하기 단계는 원본의 데이터를 별도의 데이터로 가공하기 위한 중간 연산의 단계.
+       어떤 객체의 Stream을 원하는 형태로 처리할 수 있으며, 중간 연산의 반환값은 Stream이기 때문에 필요한 만큼 중간 연산을 연결하여 사용할 수 있음.
+
+    3. 결과 만들기
+       가공된 데이터로부터 원하는 결과를 만들기 위한 최종 연산
+       Stream의 요소들을 소모하면서 연산이 수행되기 때문에 1번만 처리 가능.
+
+    ex. List<String> myList = Arrays.asList("a1", "a2", "b1", "c2", "c1");
+
+        myList
+        .stream()							// 생성하기
+        .filter(s -> s.startsWith("c"))     // 가공하기
+        .map(String::toUpperCase)			// 가공하기
+        .sorted()							// 가공하기
+        .count();							// 결과만들기
 
  */
