@@ -105,15 +105,15 @@ public class RestaurantService {
                 .createdAt(restaurant.getCreatedAt())
                 .updatedAt(restaurant.getUpdatedAt())
                 .build()
-        ).toList();
+        ).toList(); // 리스트로 결과를 만들어서 반환.
 
     } // 수정, 생성을 안하는 읽기만 하는 메소드는  @Transactional을 굳이 붙여주지 않아도 됨.
       // but.  @Transactional(readOnly = true)를 사용 -> 조회 속도 개선 효과도 존재.
 
     @Transactional(readOnly = true)
     public RestaurantDetailView getRestaurantDetail(Long restaurantId){ // 맛집 정보 가져오기 로직.
-        RestaurantEntity restaurant = restaurantRepository.findById(restaurantId).orElseThrow();
-        List<MenuEntity> menus = menuRepository.findAllByRestaurantId(restaurantId);
+        RestaurantEntity restaurant = restaurantRepository.findById(restaurantId).orElseThrow(); // restaurantId를 사용하여 해당 엔티티를 찾고 없으면 예외 발생.
+        List<MenuEntity> menus = menuRepository.findAllByRestaurantId(restaurantId); // 해당 맛집과 관련된 메뉴 리스트 찾기.
 
         return RestaurantDetailView.builder()
                 .id(restaurant.getId())
@@ -216,7 +216,7 @@ public class RequiredArgsConstructorControllerExample {
        배열, 컬렉션, 임의의 수, 파일 등 거의 모든 것을 가지고 스트림을 생성 가능. 주의할 점은 연산이 끝나면 Stream이 닫히기 때문에,
        Stream이 닫혔을 경우 다시 Stream을 생성해야함.
 
-    2. 가공
+    2. 가공 (매개변수로 함수형 인터페이스(Functional Interface)를 받도록 되어있음. 람다식을 통해 함수 인터페이스 제공. bc.람다식은 반환값으로 함수형 인터페이스를 반환하고 있음.)
        원본의 데이터를 별도의 데이터로 가공하기 위한 중간 연산. 연산 결과를 Stream으로 다시 반환하기 때문에 연속해서 중간 연산을 이어갈 수 있음.
        가공하기 단계는 원본의 데이터를 별도의 데이터로 가공하기 위한 중간 연산의 단계.
        어떤 객체의 Stream을 원하는 형태로 처리할 수 있으며, 중간 연산의 반환값은 Stream이기 때문에 필요한 만큼 중간 연산을 연결하여 사용할 수 있음.
@@ -229,9 +229,12 @@ public class RequiredArgsConstructorControllerExample {
 
         myList
         .stream()							// 생성하기
-        .filter(s -> s.startsWith("c"))     // 가공하기
-        .map(String::toUpperCase)			// 가공하기
-        .sorted()							// 가공하기
-        .count();							// 결과만들기
+        .filter(s -> s.startsWith("c"))     // 가공하기 (필터링 - 조건에 맞는 데이터만을 정제하여 더 작은 컬렉션을 만들어내는 연산)
+        .map(String::toUpperCase)			// 가공하기 (데이터 변환 - 기존의 Stream 요소들을 변환하여 새로운 Stream을 형성하는 연산. )
+        .sorted()							// 가공하기 (정렬 - 파라미터로 Comparator를 넘길 수도 있다. Comparator 인자 없이 호출할 경우에는 오름차순으로 정렬)
+        .count();							// 결과만들기 ( 최댓값/최솟값/총합/평균/갯수 - Max/Min/Sum/Average/Count)
+
+          cf) Stream 연산들은
+
 
  */
