@@ -32,6 +32,9 @@ dependencies {
 	annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
 	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
 	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+	// annotationProcessor는 자바 컴파일러 플러그인 일종으로, 컴파일 단계에서 프로젝트 내의 @Entity(javax.persistence.Entity) 애노테이션을 선언한 클래스를 탐색하여 com.querydsl.apt.jpa.JPAAnnotationProcessor를 통해 쿼리 타입(QClass)을 생성.
+	// 생성된 쿼리 타입(QClass)은 com.querydsl.core.QueryFactory에 주입하여 사용.
+
 }
 
 tasks.named('test') {

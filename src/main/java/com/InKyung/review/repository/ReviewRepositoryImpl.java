@@ -15,15 +15,16 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Repository
-public class ReviewRepositoryImpl implements ReviewRepositoryCustom{
-    private final JPAQueryFactory queryFactory;
+public class ReviewRepositoryImpl implements ReviewRepositoryCustom{ // Custom이 붙은 인터페이스를 상속한 Impl 클래스의 코드는 Custom 인터페이스를 상속한 JpaRepository에서도 사용할 수 있게됨. Custom 인터페이스에서 선언한 함수를 정의해줌.
+    private final JPAQueryFactory queryFactory; //  Querydsl을 사용하여 동적 쿼리를 생성하기 위한 JPAQueryFactory 객체를 주입.
 
     @Override
-    public Double getAvgScoreByRestaurantId(Long restaurantId) {
+    public Double getAvgScoreByRestaurantId(Long restaurantId) { // 해당 맛집에 속한 리뷰들의 평균 점수를 조회합니다.
         return queryFactory.select(QReviewEntity.reviewEntity.score.avg())
                 .from(QReviewEntity.reviewEntity)
                 .where(QReviewEntity.reviewEntity.restaurantId.eq(restaurantId))
                 .fetchFirst();  // 특정 레스토랑에 속한 리뷰들의 평균 점수를 계산하여 첫 번째 결과를 가져오는 쿼리를 생성
+                                // .fetchFirst()는 단일 값을 가져올 때 유용하게 사용되며, 주로 결과가 하나일 경우나 특정 조건을 만족하는 첫 번째 결과를 가져올 때 활용. 만약 결과가 여러 개인 경우에는 .fetch() 등을 사용하여 리스트 형태로 결과를 가져올 수 있음.
     }
 
     @Override
