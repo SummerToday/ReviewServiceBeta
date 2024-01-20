@@ -7,17 +7,17 @@ SpringBoot, Docker, H2 Database, AWS를 활용한 맛집 리뷰 서비스
 <br></br>
 
 ## 📌Stacks
-<hr>
+
 
 ### Environment
 
-<img src="https://img.shields.io/badge/intellijidea-000000?style=for-the-badge&logo=intellijidea&logoColor=white"><img src="https://img.shields.io/badge/postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white"><img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white">
+<img src="https://img.shields.io/badge/intellijidea-0062AD?style=for-the-badge&logo=intellijidea&logoColor=white"><img src="https://img.shields.io/badge/postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white"><img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white">
 
 
 ### Devlopment
 <img src="https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white"><img src="https://img.shields.io/badge/docker-2496ED?style=for-the-badge&logo=docker&logoColor=white"><img src="https://img.shields.io/badge/amazonaws-232F3E?style=for-the-badge&logo=amazonaws&logoColor=white"><img src="https://img.shields.io/badge/h2 database-777BB4?style=for-the-badge&logo=h2database&logoColor=white">
 
-### Comunication
+### Communication
 <img src="https://img.shields.io/badge/notion-44C1C5?style=for-the-badge&logo=notion&logoColor=white">
 <br></br>
 
