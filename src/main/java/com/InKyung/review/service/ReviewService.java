@@ -40,7 +40,7 @@ public class ReviewService {
 
     }
 
-    public ReviewDto getRestaurantReview(Long restaurantId, Pageable page){ // 해당 맛집의 리뷰 목록 조회
+    public ReviewDto getRestaurantReview(Long restaurantId, Pageable page){ // 해당 맛집의 리뷰 목록 조회, Pageable 객체는 Pagination을 위한 정보를 저장하는 객체.
         Double avgScore = reviewRepository.getAvgScoreByRestaurantId(restaurantId); // 해당 맛집의 리뷰 평균 점수 계산.
         Slice<ReviewEntity> reviews= reviewRepository.findSliceByRestaruantId(restaurantId, page);
 

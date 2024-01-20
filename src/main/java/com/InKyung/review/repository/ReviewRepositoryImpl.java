@@ -33,11 +33,11 @@ public class ReviewRepositoryImpl implements ReviewRepositoryCustom{ // Custom�
                 .from(QReviewEntity.reviewEntity)
                 .where(QReviewEntity.reviewEntity.restaurantId.eq(restaurantId))
                 .offset((long) page.getPageNumber() * page.getPageSize()) // 몇번부터 가져올지
-                .limit(page.getPageSize() + 1) // 몇개를 가져올지 but. 요청된 부분을 가져오고 난 후 다음 부분이 남아있는지 여부를 클라이언트에게
+                .limit(page.getPageSize() + 1) // 현재 페이지에 가져올 리뷰의 최대 개수를 설정 but. 요청된 부분을 가져오고 난 후 다음 부분이 남아있는지 여부를 클라이언트에게
                 // 고지해줘야함. so-> 클라이언트가 다음 부분을 요청 여부를 결정할 수 있음. so => +1과 을 reviews.size() > page.getPageSize() 해주는 것.
-                .fetch();
+                .fetch(); // 결과가 여러 개인 경우에는 .fetch() 등을 사용하여 리스트 형태로 결과 반환.
 
-        return new SliceImpl<>(
+        return new SliceImpl<>( // Slice 인터페이스 구현체 Class, SliceImpl(List<T> content, Pageable pageable, boolean hasNext){}
                 reviews.stream().limit(page.getPageSize()).toList(),
                 page,
                 reviews.size() > page.getPageSize() // 다음 부분을 가져올 수 있는 지 여부 확인 가능.
