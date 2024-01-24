@@ -28,7 +28,7 @@ SpringBoot, Docker, H2 Database, AWS를 활용한 맛집 리뷰 서비스
 
 ## 🔎 고객 요구사항 분석
 
-### • 사용자 Flow (Usecase)
+### • Usecase
 
 - 맛집 정보를 등록할 수 있다.
 - 맛집 정보를 수정할 수 있다.
