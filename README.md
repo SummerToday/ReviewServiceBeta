@@ -134,7 +134,7 @@ SpringBoot, Docker, H2 Database, AWS를 활용한 맛집 리뷰 서비스
    ```
    DELETE /review/{reviewId}
    ```
- - 맛집에 등록된 리뷰 조회하기.
+ - 맛집에 등록된 리뷰 조회 API
    ```
    GET /restaurant/{restaurantId}/reviews
 
