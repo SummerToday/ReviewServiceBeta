@@ -1,5 +1,5 @@
 # SpringBoot-Project-Restaurant Review Service
-SpringBoot, Docker, H2 Database, AWS를 활용한 맛집 리뷰 서비스
+SpringBoot, Docker, H2 Database, AWS를 활용한 맛집 리뷰 서비스.
 <br></br>
 
 ## 💻 프로젝트 소개
