@@ -42,7 +42,6 @@ SpringBoot, Docker, H2 Database, AWS를 활용한 맛집 리뷰 서비스.
 ### • 데이터
 
 - 맛집
- 
   - 이름 (String)
   - 주소 (String)
   - N개의 메뉴
